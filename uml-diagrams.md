@@ -56,63 +56,73 @@ flowchart LR
 ## 2. Классы (Class)
 
 ```mermaid
-%%{init: {"theme":"base","themeVariables":{"primaryColor":"#F5E6C8","primaryBorderColor":"#C9A95C","primaryTextColor":"#4A3B22","lineColor":"#A98A4E","tertiaryColor":"#E8F0E3"}}}%%
 classDiagram
-    direction LR
 
-    class User
-    class Product
-    class Recipe
-    class Ingredient
-    class Order
-    class Sale
+    class User {
+        +int id
+        +string login
+        +string passwordHash
+        +string role
+        +string fullName
+    }
 
-    <<enumeration>> Role
-    <<enumeration>> MatType
-    <<enumeration>> OrderStatus
+    class Product {
+        +int id
+        +string name
+        +string category
+        +decimal weight
+        +decimal price
+        +date expiryDate
+    }
 
-    User : +int id
-    User : +string login
-    User : +string passwordHash
-    User : +Role role
-    User : +string fullName
+    class Recipe {
+        +int id
+        +string operation
+        +decimal outputPerUnit
+    }
 
-    Product : +int id
-    Product : +string name
-    Product : +string category
-    Product : +decimal weight
-    Product : +decimal price
-    Product : +date expiryDate
+    class Ingredient {
+        +int id
+        +string name
+        +string unit
+        +decimal stock
+    }
 
-    Recipe : +int id
-    Recipe : +string operation
-    Recipe : +decimal outputPerUnit
+    class Order {
+        +int id
+        +string client
+        +datetime dateTimeDelivery
+        +string status
+    }
 
-    Ingredient : +int id
-    Ingredient : +string name
-    Ingredient : +string unit
-    Ingredient : +decimal stock
+    class Sale {
+        +int id
+        +decimal quantity
+        +decimal amount
+    }
 
-    Order : +int id
-    Order : +string client
-    Order : +datetime dateTimeDelivery
-    Order : +OrderStatus status
+    class WarehouseService {
+        +receive(Ingredient, decimal)
+        +writeOffProduction(Ingredient, decimal)
+        +inventory(Ingredient, decimal)
+        +writeOffExpired(Product)
+    }
 
-    Sale : +int id
-    Sale : +decimal quantity
-    Sale : +decimal amount
+    class OrderService {
+        +createOrder(Order)
+        +issue(Order)
+    }
 
-    WarehouseService : +receive(Ingredient, decimal)
-    WarehouseService : +writeOffProduction(Ingredient, decimal)
-    WarehouseService : +inventory(Ingredient, decimal)
-    WarehouseService : +writeOffExpired(Product)
-    OrderService : +createOrder(Order)
-    OrderService : +issue(Order)
-    SalesService : +sell(Product, decimal)
-    SalesService : +releaseByOrder(Order)
-    ReportService : +rawMaterialReport()
-    ReportService : +salesReport()
-    ReportService : +controlPositionsReport()
+    class SalesService {
+        +sell(Product, decimal)
+        +releaseByOrder(Order)
+    }
+
+    class ReportService {
+        +rawMaterialReport()
+        +salesReport()
+        +controlPositionsReport()
+    }
 
     Product "1" --> "0..*" Recipe : рецептура
     Recipe "0..*" --> "1..*" Ingredient : нормы закладки
@@ -124,11 +134,6 @@ classDiagram
     OrderService ..> Order : оперирует
     SalesService ..> Sale : оперирует
     ReportService ..> User : обслуживает
-
-    style WarehouseService fill:#E8F0E3,stroke:#7FA05C
-    style OrderService fill:#E8F0E3,stroke:#7FA05C
-    style SalesService fill:#E8F0E3,stroke:#7FA05C
-    style ReportService fill:#E8F0E3,stroke:#7FA05C
 ```
 
 ---
